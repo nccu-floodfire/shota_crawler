@@ -1,8 +1,9 @@
+<?php
+    include('member/check_login.php');
+?>
 <!DOCTYPE html>
 <!--
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
+udn_crawler首頁
 -->
 <html>
     <head>
@@ -12,8 +13,7 @@ and open the template in the editor.
     <body>
         <?php
         // put your code here
-            printf("<p>\"恭喜，連線成功！\"<br>========================================<br>");
-            //header('Location:https://tw.yahoo.com/');
+            echo "這是會員區777777777";
         ?>
     </body>
 </html>
