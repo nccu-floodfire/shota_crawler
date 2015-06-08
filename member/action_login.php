@@ -1,7 +1,8 @@
 <?php
 /* 
-驗證會員的檔案
+驗證會員的檔案(目前已被login.php取代)
  */
+    session_start(); // 使用session
     header("Content-Type:text/html; charset=utf-8"); // 指定編碼
     require('config.php');
  
@@ -31,21 +32,23 @@
             $User_Password = $row['Password'];
             // 密碼核對
             if ( $User_Password == md5($Password) ) {
-                //printf( "登入成功!!<br>" );
-                $cookie_expiry = ( time() + 3600 ); // 一分鐘內不需重新登入
-                setcookie( "cookie_id", md5($Account.$Password), $cookie_expiry );
-                // 轉跳至首頁
-                //header('Location:https://www.google.com.tw');
+                printf( "<script language='javascript'> alert(\"登入成功!!\"); </script>" );
+                //$cookie_expiry = ( time() + 3600 ); // 一小時內不需重新登入
+                // Just use / as the cookie path. That way your cookie will be available to your entire domain.
+                //setcookie( "cookie_id", md5($Account.$Password), $cookie_expiry, "/" );
+                // 轉跳至首
                 header('Location:http://140.119.164.218/~shota/udn_crawler/index.php');
             }else{
-                //printf( "密碼錯誤!!<br>" );
+                printf( "<script language='javascript'> alert(\"密碼錯誤!!\"); </script>" );
+                printf( "<a href=\"http://140.119.164.218/~shota/udn_crawler/member/login.php\">重新登入</a>");
                 // 轉跳回原登入頁面
-                header('Location:http://140.119.164.218/~shota/udn_crawler/member/login.php');
+                //header('Location:http://140.119.164.218/~shota/udn_crawler/member/login.php');
             }
         }else{
-            //printf( "查無此帳號!!<br>" );
+            printf( "<script language='javascript'> alert(\"查無此帳號!!\"); </script>" );
+            printf( "<a href=\"http://140.119.164.218/~shota/udn_crawler/member/login.php\">重新登入</a>");
             // 轉跳回原登入頁面
-            header('Location:http://140.119.164.218/~shota/udn_crawler/member/login.php');
+            //header('Location:http://140.119.164.218/~shota/udn_crawler/member/login.php');
         }
     }
     

@@ -12,8 +12,7 @@ udn_crawler首頁
     </head>
     <body>
         <?php
-        // put your code here
-            echo "這是會員區777777777";
+            echo "這是會員區";
         ?>
     </body>
 </html>
