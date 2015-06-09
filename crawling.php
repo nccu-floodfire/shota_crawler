@@ -1,16 +1,12 @@
-<?php
-    include('member/check_login.php');
-?>
 <!DOCTYPE HTML>
 <!--
-    udn_crawler首頁
-    TXT by HTML5 UP
-    html5up.net | @n33co
-    Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+        TXT by HTML5 UP
+        html5up.net | @n33co
+        Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
 <html>
     <head>
-        <title>Search - udn_crawler</title>
+        <title>No Sidebar - TXT by HTML5 UP</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
@@ -24,8 +20,8 @@
             <header id="header">
                 <div class="logo container">
                     <div>
-                        <h1><a href="index.php" id="logo">Search</a></h1>
-                        <p>udn聯合知識庫[定址會員]搜尋</p>
+                        <h1><a href="crawling.php" id="logo">Crawling Case</a></h1>
+                        <p>目前情況</p>
                     </div>
                 </div>
             </header>
@@ -33,7 +29,7 @@
             <!-- Nav -->
             <nav id="nav">
                 <ul>
-                    <li class="current"><a href="index.php">Search</a></li>
+                    <li><a href="index.php">Search</a></li>
                     <!--<li>
                         <a href="#">Dropdown</a>
                         <ul>
@@ -51,7 +47,7 @@
                             <li><a href="#">Veroeros feugiat</a></li>
                         </ul>
                     </li>-->
-                    <li><a href="crawling.php">Crawling Case</a></li>
+                    <li class="current"><a href="crawling.php">Crawling Case</a></li>
                     <!--<li><a href="right-sidebar.php">Right Sidebar</a></li>-->
                     <li><a href="finished.php">Finished Case</a></li>
                 </ul>
@@ -69,7 +65,7 @@
                                 <article class="box page-content">
 
                                     <header>
-                                        <h2>搜尋 | Search</h2>
+                                        <h2>目前情況</h2>
                                         <!--<p>Semper amet scelerisque metus faucibus morbi congue mattis</p>
                                         <ul class="meta">
                                             <li class="icon fa-clock-o">5 days ago</li>
@@ -77,57 +73,6 @@
                                         </ul>-->
                                     </header>
 
-                                    <!-- 還沒寫完!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-                                    <section> 
-                                        <form action="" method="POST">
-                                            <p>關鍵字: <input type="text" name="Keyword" /></p>
-                                            <p>
-                                                <input type="radio" checked="checked" name="Sex" value="male" />and
-                                                <input type="radio" checked="checked" name="Sex" value="male" />or
-                                                <input type="radio" checked="checked" name="Sex" value="male" />not
-                                                <input type="text" name="Keyword_2" />
-                                                <select name="cars">
-                                                    <option value="volvo">標題</option>
-                                                    <option value="saab">版名</option>
-                                                    <option value="fiat">版次</option>
-                                                    <option value="audi">所有欄位</option>
-                                                </select>
-                                            </p>
-                                            <p>
-                                                <input type="radio" checked="checked" name="Sex" value="male" />and
-                                                <input type="radio" checked="checked" name="Sex" value="male" />or
-                                                <input type="radio" checked="checked" name="Sex" value="male" />not
-                                                <input type="text" name="Keyword_3" />
-                                                <select name="cars">
-                                                    <option value="volvo">標題</option>
-                                                    <option value="saab">版名</option>
-                                                    <option value="fiat">版次</option>
-                                                    <option value="audi">所有欄位</option>
-                                                </select>
-                                            </p>
-                                            <p>
-                                                <input type="radio" checked="checked" name="Sex" value="male" />and
-                                                <input type="radio" checked="checked" name="Sex" value="male" />or
-                                                <input type="radio" checked="checked" name="Sex" value="male" />not
-                                                <input type="text" name="Keyword_4" />
-                                                <select name="cars">
-                                                    <option value="volvo">標題</option>
-                                                    <option value="saab">版名</option>
-                                                    <option value="fiat">版次</option>
-                                                    <option value="audi">所有欄位</option>
-                                                </select>
-                                            </p>
-                                            <p>日期: 
-                                            </p>
-                                            <p>資料來源: 
-                                            </p>
-                                            <p>資料筆數: 
-                                            </p>
-                                            <p>資料排序: 
-                                            </p>
-                                            <p><input type="submit" name="submit" value="查詢" /></p>
-                                        <form>
-                                    </section>
                                     <!--<section>
                                         <span class="image featured"><img src="images/pic05.jpg" alt="" /></span>
                                         <p>
@@ -136,9 +81,9 @@
                                             Aliquam luctus et mattis lectus sit amet pulvinar. Nam turpis nisi
                                             consequat etiam lorem ipsum dolor sit amet nullam.
                                         </p>
-                                    </section>-->
+                                    </section>
 
-                                    <!--<section>
+                                    <section>
                                         <h3>More intriguing information</h3>
                                         <p>
                                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ac quam risus, at tempus
@@ -153,9 +98,9 @@
                                             Donec sagittis massa et leo semper a scelerisque metus faucibus. Morbi congue mattis mi.
                                             Phasellus sed nisl vitae risus tristique volutpat. Cras rutrum commodo luctus.
                                         </p>
-                                    </section>-->
+                                    </section>
 
-                                    <!--<section>
+                                    <section>
                                         <h3>So in conclusion ...</h3>
                                         <p>
                                             Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ac quam risus, at tempus
@@ -240,15 +185,15 @@
 
                                         </div>
                                     </div>
-                                    <!--<div class="row">
+                                    <div class="row">
                                         <div class="12u">
                                             <ul class="actions">
                                                 <li><a href="#" class="button big">Do Something</a></li>
                                                 <li><a href="#" class="button alt big">Think About It</a></li>
                                             </ul>
                                         </div>
-                                    </div>-->
-                                <!--</div>
+                                    </div>
+                                </div>
                             </section>
 
                         </div>

@@ -14,7 +14,7 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>Login</title>
+        <title>Login - udn_crawler</title>
     </head>
     
     <body>
@@ -62,6 +62,8 @@
                     header("refresh: 5; url=http://140.119.164.218/~shota/udn_crawler/member/login.php");
                 }
             }else{
+                //==========close connection
+                $mysqli->close();
                 printf("查無此帳號!!請重新登入!!<br>請稍等5秒...");
                 // 轉跳, 重新登入
                 header("refresh: 5; url=http://140.119.164.218/~shota/udn_crawler/member/login.php");
