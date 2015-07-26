@@ -50,8 +50,11 @@ $Password = $_POST['Password'];
                                 <article class="box page-content">
                                     <section>
                                         <?php
+                                        if ( isset($_SESSION['session_id']) ) { // 代表已經登入
+                                            header('Location:http://140.119.164.218/~shota/udn_crawler/index.php'); // 轉跳首頁
+                                        }
                                         if (empty($Account) || empty($Password)) {
-                                        ?>
+                                            ?>
                                             <form action="login.php" method="POST">
                                                 <!--
                                                     當提交表單時，表單數據會提交到名為"login.php" 的頁面(本頁面)：
@@ -60,7 +63,7 @@ $Password = $_POST['Password'];
                                                 <p align = "center">Password: <input type="password" name="Password" /></p>
                                                 <p align = "center"><input type="submit" name="submit" value="Login" /></p>
                                             </form>
-                                        <?php
+                                            <?php
                                         } else {
                                             $mysqli = new mysqli($db_host, $db_user, $db_pass, $db_name);
                                             $mysqli->set_charset("utf8"); // 連線使用UTF-8
