@@ -1,5 +1,6 @@
 <?php
-    include('member/check_login.php');
+include("member/check_login.php"); // 登入安全機制
+require("crawler/crawler.php");
 ?>
 <!DOCTYPE HTML>
 <!--
@@ -26,6 +27,11 @@
                     <div>
                         <h1><a href="index.php" id="logo">Search</a></h1>
                         <p>udn聯合知識庫[定址會員]搜尋</p>
+                        </br><p><font color=#006400>
+                            <?php
+                            echo $_SESSION['session_id'] . " 您好"
+                            ?>
+                        </font></p>
                     </div>
                 </div>
             </header>
@@ -34,26 +40,9 @@
             <nav id="nav">
                 <ul>
                     <li class="current"><a href="index.php">Search</a></li>
-                    <!--<li>
-                        <a href="#">Dropdown</a>
-                        <ul>
-                            <li><a href="#">Lorem ipsum dolor</a></li>
-                            <li><a href="#">Magna phasellus</a></li>
-                            <li>
-                                <a href="#">Phasellus consequat</a>
-                                <ul>
-                                    <li><a href="#">Lorem ipsum dolor</a></li>
-                                    <li><a href="#">Phasellus consequat</a></li>
-                                    <li><a href="#">Magna phasellus</a></li>
-                                    <li><a href="#">Etiam dolore nisl</a></li>
-                                </ul>
-                            </li>
-                            <li><a href="#">Veroeros feugiat</a></li>
-                        </ul>
-                    </li>-->
                     <li><a href="crawling.php">Crawling Case</a></li>
-                    <!--<li><a href="right-sidebar.php">Right Sidebar</a></li>-->
-                    <li><a href="finished.php">Finished Case</a></li>
+                    <!--<li><a href="Logout">Logout</a></li>-->
+                    <!--<li><a href="finished.php">Finished Case</a></li>-->
                 </ul>
             </nav>
 
@@ -63,243 +52,116 @@
                     <div class="row">
                         <div class="12u">
                             <div class="content">
-
                                 <!-- Content -->
-
                                 <article class="box page-content">
-
+                                    <!-- 查詢結果連結 -->
+                                    <?php
+                                    if (isset($_POST['submit'])) { // 如果使用者按過送出查詢
+                                        if (!empty($_POST['SearchString'])) { // 至少要有第一個關鍵字
+                                            if ($_POST['united'] != 1 && $_POST['economic'] != 1 && $_POST['minsen'] != 1 && $_POST['united_late'] != 1 && $_POST['star'] != 1 && $_POST['upaper'] != 1 && $_POST['world'] != 1 && $_POST['europe'] != 1) {
+                                                echo "<p><strong><font color=#FF6600>請至少選擇一種報系!!</font></strong></p>";
+                                            } else {
+                                                $c = new Crawler;
+                                                $c->query_saver();  // 將使用者的查詢存進資料庫
+                                                echo "<p><strong><font color=#FF6600><a href=http://140.119.164.218/~shota/udn_crawler/crawling.php>您的查詢已建立，請點我檢視目前的處理情況。</a></font></strong></p>";
+                                            }
+                                            /* if ($c->link != NULL) {
+                                              echo "<p><a href=\"" . $c->link . "\" target=\"_blank\">國內報系查詢連結</a></p>";
+                                              }
+                                              if ($c->link_out != NULL) {
+                                              echo "<p><a href=\"" . $c->link_out . "\" target=\"_blank\">海外報系查詢連結</a></p>";
+                                              } */
+                                        } else {
+                                            echo "<p><strong><font color=#FF6600>請至少輸入一個關鍵字!!</font></strong></p>";
+                                        }
+                                    }
+                                    ?>
                                     <header>
                                         <h2>搜尋 | Search</h2>
-                                        <!--<p>Semper amet scelerisque metus faucibus morbi congue mattis</p>
-                                        <ul class="meta">
-                                            <li class="icon fa-clock-o">5 days ago</li>
-                                            <li class="icon fa-comments"><a href="#">1,024</a></li>
-                                        </ul>-->
                                     </header>
-
-                                    <!-- 還沒寫完!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!-->
-                                    <section> 
-                                        <form action="" method="POST">
-                                            <p>關鍵字: <input type="text" name="Keyword" /></p>
-                                            <p>
-                                                <input type="radio" checked="checked" name="Sex" value="male" />and
-                                                <input type="radio" checked="checked" name="Sex" value="male" />or
-                                                <input type="radio" checked="checked" name="Sex" value="male" />not
-                                                <input type="text" name="Keyword_2" />
-                                                <select name="cars">
-                                                    <option value="volvo">標題</option>
-                                                    <option value="saab">版名</option>
-                                                    <option value="fiat">版次</option>
-                                                    <option value="audi">所有欄位</option>
-                                                </select>
+                                    <section>
+                                        <form action="index.php" method="POST">
+                                            <!-- type這格的屬性, name這格的變數名稱, checked這格預設要被選 -->
+                                            <p>關鍵字： 
+                                                <input type="text" name="SearchString" />
                                             </p>
                                             <p>
-                                                <input type="radio" checked="checked" name="Sex" value="male" />and
-                                                <input type="radio" checked="checked" name="Sex" value="male" />or
-                                                <input type="radio" checked="checked" name="Sex" value="male" />not
-                                                <input type="text" name="Keyword_3" />
-                                                <select name="cars">
-                                                    <option value="volvo">標題</option>
-                                                    <option value="saab">版名</option>
-                                                    <option value="fiat">版次</option>
-                                                    <option value="audi">所有欄位</option>
-                                                </select>
+                                                <input type="radio" name="operator_2" value="+" checked/>and
+                                                <input type="radio" name="operator_2" value="/"/>or
+                                                <input type="radio" name="operator_2" value="-"/>not
+                                                <input type="text" name="SearchString_2" />
                                             </p>
                                             <p>
-                                                <input type="radio" checked="checked" name="Sex" value="male" />and
-                                                <input type="radio" checked="checked" name="Sex" value="male" />or
-                                                <input type="radio" checked="checked" name="Sex" value="male" />not
-                                                <input type="text" name="Keyword_4" />
-                                                <select name="cars">
-                                                    <option value="volvo">標題</option>
-                                                    <option value="saab">版名</option>
-                                                    <option value="fiat">版次</option>
-                                                    <option value="audi">所有欄位</option>
-                                                </select>
+                                                <input type="radio" name="operator_3" value="+" checked/>and
+                                                <input type="radio" name="operator_3" value="/" />or
+                                                <input type="radio" name="operator_3" value="-"/>not
+                                                <input type="text" name="SearchString_3" />
                                             </p>
-                                            <p>日期: 
+                                            <p>
+                                                <input type="radio" name="operator_4" value="+" checked/>and
+                                                <input type="radio" name="operator_4" value="/" />or
+                                                <input type="radio" name="operator_4" value="-"/>not
+                                                <input type="text" name="SearchString_4" />
                                             </p>
-                                            <p>資料來源: 
+                                            <p>日期：<br/>
+                                                <!-- 選擇一，選從今天往後多久以前 -->
+                                                <input type="radio" name="date" value="00" checked/>
+                                                <strong><font color=#FF6600>←選擇後記得點我!!</font></strong>
+                                                <select name="ago"> <!-- selected預設被選取 -->
+                                                    <option value= 0 selected>今天</option>
+                                                    <option value= 6 >近 7 天</option>
+                                                    <option value= 29 >近 30 天</option>
+                                                    <option value= 365 >近一年</option>
+                                                    <option value= 1095 >近三年</option>
+                                                    <option value= 2185 >近六年</option>
+                                                    <option value= 3630 >近十年</option>
+                                                    <option value= -1 >所有日期</option>
+                                                    <!-- ※沒登入不能使用所有日期搜尋-->
+                                                </select><br/>
+                                                <!-- 選擇二，選一個時間區間-->
+                                                <input type="radio" name="date" value="99" />
+                                                <strong><font color=#FF6600>←或者點我輸入日期範圍</font></strong>
+                                                </br>從(例：西元2014年12月16日，請輸入<strong><font color=#FF6600>20141216</font></strong>
+                                                <input type="text" name="start" />
+                                                到(例：西元2015年6月9日，請輸入<strong><font color=#FF6600>20150609</font></strong>
+                                                <input type="text" name="end">
                                             </p>
-                                            <p>資料筆數: 
+                                            <p>資料來源：
+                                                <input type="checkbox" name="united" value=1 checked/>聯合報
+                                                <input type="checkbox" name="economic" value=1 checked/>經濟日報
+                                                <input type="checkbox" name="minsen" value=1 checked/>民生報
+                                                <input type="checkbox" name="united_late" value=1 checked/>聯合晚報
+                                                <input type="checkbox" name="star" value=1 checked/>星報
+                                                <input type="checkbox" name="upaper" value=1 checked/>Upaper
+                                                <input type="checkbox" name="world" value=1 checked/>美洲世界日報
+                                                <input type="checkbox" name="europe" value=1 checked/>歐洲日報
                                             </p>
-                                            <p>資料排序: 
+                                            <p>
+                                                <input type="submit" name="submit" value="查詢" />
+                                                按下查詢後請耐心等候，謝謝!!
                                             </p>
-                                            <p><input type="submit" name="submit" value="查詢" /></p>
-                                        <form>
+                                        </form>
+                                        <p>民生報自2006年11月30日起停刊，仍可查得1978年2月18日至2006年11月30日期間的所有民生報資料。
+                                            </br>星報自2006年11月1日起停刊，仍可查得1999年9月1日至2006年10月31日期間的所有星報資料。
+                                            </br>歐洲日報自2009年09月01日起停刊，仍可查得2000年2月1日至2009年8月31日期間，聯合知識庫收錄的歐洲日報資料。
+                                            </br>歐洲日報、美洲世界日報資料因時差關係，入庫時間延後一天。
+                                        </p>
                                     </section>
-                                    <!--<section>
-                                        <span class="image featured"><img src="images/pic05.jpg" alt="" /></span>
-                                        <p>
-                                            Phasellus quam turpis, feugiat sit amet ornare in, hendrerit in lectus.
-                                            Praesent semper mod quis eget mi. Etiam eu ante risus. Aliquam erat volutpat.
-                                            Aliquam luctus et mattis lectus sit amet pulvinar. Nam turpis nisi
-                                            consequat etiam lorem ipsum dolor sit amet nullam.
-                                        </p>
-                                    </section>-->
-
-                                    <!--<section>
-                                        <h3>More intriguing information</h3>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ac quam risus, at tempus
-                                            justo. Sed dictum rutrum massa eu volutpat. Quisque vitae hendrerit sem. Pellentesque lorem felis,
-                                            ultricies a bibendum id, bibendum sit amet nisl. Mauris et lorem quam. Maecenas rutrum imperdiet
-                                            vulputate. Nulla quis nibh ipsum, sed egestas justo. Morbi ut ante mattis orci convallis tempor.
-                                            Etiam a lacus a lacus pharetra porttitor quis accumsan odio. Sed vel euismod nisi. Etiam convallis
-                                            rhoncus dui quis euismod. Maecenas lorem tellus, congue et condimentum ac, ullamcorper non sapien
-                                            vulputate. Nulla quis nibh ipsum, sed egestas justo. Morbi ut ante mattis orci convallis tempor.
-                                            Etiam a lacus a lacus pharetra porttitor quis accumsan odio. Sed vel euismod nisi. Etiam convallis
-                                            rhoncus dui quis euismod. Maecenas lorem tellus, congue et condimentum ac, ullamcorper non sapien.
-                                            Donec sagittis massa et leo semper a scelerisque metus faucibus. Morbi congue mattis mi.
-                                            Phasellus sed nisl vitae risus tristique volutpat. Cras rutrum commodo luctus.
-                                        </p>
-                                    </section>-->
-
-                                    <!--<section>
-                                        <h3>So in conclusion ...</h3>
-                                        <p>
-                                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ac quam risus, at tempus
-                                            justo. Sed dictum rutrum massa eu volutpat. Quisque vitae hendrerit sem. Pellentesque lorem felis,
-                                            ultricies a bibendum id, bibendum sit amet nisl. Mauris et lorem quam. Maecenas rutrum imperdiet
-                                            vulputate. Nulla quis nibh ipsum, sed egestas justo. Morbi ut ante mattis orci convallis tempor.
-                                            Etiam a lacus a lacus pharetra porttitor quis accumsan odio. Sed vel euismod nisi. Etiam convallis
-                                            rhoncus dui quis euismod. Maecenas lorem tellus, congue et condimentum ac, ullamcorper non sapien.
-                                            Donec sagittis massa et leo semper a scelerisque metus faucibus. Morbi congue mattis mi.
-                                            Phasellus sed nisl vitae.
-                                        </p>
-                                        <p>
-                                            Suspendisse laoreet metus ut metus imperdiet interdum aliquam justo tincidunt. Mauris dolor urna,
-                                            fringilla vel malesuada ac, dignissim eu mi. Praesent mollis massa ac nulla pretium pretium.
-                                            Maecenas tortor mauris, consectetur pellentesque dapibus eget, tincidunt vitae arcu.
-                                        </p>
-                                    </section>-->
-
                                 </article>
-
                             </div>
                         </div>
                     </div>
-                    <!--<div class="row 200%">
-                        <div class="12u">
-
-                            <!-- Features -->
-                            <!--<section class="box features">
-                                <h2 class="major"><span>A Major Heading</span></h2>
-                                <div>
-                                    <div class="row">
-                                        <div class="3u 12u(mobile)">
-
-                                            <!-- Feature -->
-                                            <!--<section class="box feature">
-                                                <a href="#" class="image featured"><img src="images/pic01.jpg" alt="" /></a>
-                                                <h3><a href="#">A Subheading</a></h3>
-                                                <p>
-                                                    Phasellus quam turpis, feugiat sit amet ornare in, a hendrerit in
-                                                    lectus dolore. Praesent semper mod quis eget sed etiam eu ante risus.
-                                                </p>
-                                            </section>
-
-                                        </div>
-                                        <div class="3u 12u(mobile)">
-
-                                            <!-- Feature -->
-                                            <!--<section class="box feature">
-                                                <a href="#" class="image featured"><img src="images/pic02.jpg" alt="" /></a>
-                                                <h3><a href="#">Another Subheading</a></h3>
-                                                <p>
-                                                    Phasellus quam turpis, feugiat sit amet ornare in, a hendrerit in
-                                                    lectus dolore. Praesent semper mod quis eget sed etiam eu ante risus.
-                                                </p>
-                                            </section>
-
-                                        </div>
-                                        <div class="3u 12u(mobile)">
-
-                                            <!-- Feature -->
-                                            <!--<section class="box feature">
-                                                <a href="#" class="image featured"><img src="images/pic03.jpg" alt="" /></a>
-                                                <h3><a href="#">And Another</a></h3>
-                                                <p>
-                                                    Phasellus quam turpis, feugiat sit amet ornare in, a hendrerit in
-                                                    lectus dolore. Praesent semper mod quis eget sed etiam eu ante risus.
-                                                </p>
-                                            </section>
-
-                                        </div>
-                                        <div class="3u 12u(mobile)">
-
-                                            <!-- Feature -->
-                                            <!--<section class="box feature">
-                                                <a href="#" class="image featured"><img src="images/pic04.jpg" alt="" /></a>
-                                                <h3><a href="#">And One More</a></h3>
-                                                <p>
-                                                    Phasellus quam turpis, feugiat sit amet ornare in, a hendrerit in
-                                                    lectus dolore. Praesent semper mod quis eget sed etiam eu ante risus.
-                                                </p>
-                                            </section>
-
-                                        </div>
-                                    </div>
-                                    <!--<div class="row">
-                                        <div class="12u">
-                                            <ul class="actions">
-                                                <li><a href="#" class="button big">Do Something</a></li>
-                                                <li><a href="#" class="button alt big">Think About It</a></li>
-                                            </ul>
-                                        </div>
-                                    </div>-->
-                                <!--</div>
-                            </section>
-
-                        </div>
-                    </div>-->
                 </div>
             </div>
 
             <!-- Footer -->
             <footer id="footer" class="container">
-                <!--<div class="row 200%">
-                    <div class="12u">
-
-                        <!-- About -->
-                        <!--<section>
-                            <h2 class="major"><span>What's this about?</span></h2>
-                            <p>
-                                This is <strong>TXT</strong>, yet another free responsive site template designed by
-                                <a href="http://n33.co">AJ</a> for <a href="http://html5up.net">HTML5 UP</a>. It's released under the
-                                <a href="http://html5up.net/license/">Creative Commons Attribution</a> license so feel free to use it for
-                                whatever you're working on (personal or commercial), just be sure to give us credit for the design.
-                                That's basically it :)
-                            </p>
-                        </section>
-
-                    </div>
-                </div>
-                <div class="row 200%">
-                    <div class="12u">
-
-                        <!-- Contact -->
-                        <!--<section>
-                            <h2 class="major"><span>Get in touch</span></h2>
-                            <ul class="contact">
-                                <li><a class="icon fa-facebook" href="#"><span class="label">Facebook</span></a></li>
-                                <li><a class="icon fa-twitter" href="#"><span class="label">Twitter</span></a></li>
-                                <li><a class="icon fa-instagram" href="#"><span class="label">Instagram</span></a></li>
-                                <li><a class="icon fa-dribbble" href="#"><span class="label">Dribbble</span></a></li>
-                                <li><a class="icon fa-google-plus" href="#"><span class="label">Google+</span></a></li>
-                            </ul>
-                        </section>
-
-                    </div>
-                </div>
-
                 <!-- Copyright -->
                 <div id="copyright">
                     <ul class="menu">
                         <li>&copy; Shota@Flood Fire. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
                     </ul>
                 </div>
-
             </footer>
 
         </div>

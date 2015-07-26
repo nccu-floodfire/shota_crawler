@@ -1,23 +1,23 @@
-<!DOCTYPE HTML>
+<!--<!DOCTYPE HTML>
 <!--
         TXT by HTML5 UP
         html5up.net | @n33co
         Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
 -->
-<html>
+<!--<html>
     <head>
         <title>Finished Case - udn_crawler</title>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <!--[if lte IE 8]><script src="assets/js/ie/html5shiv.js"></script><![endif]-->
-        <link rel="stylesheet" href="assets/css/main.css" />
+        <!--<link rel="stylesheet" href="assets/css/main.css" />
         <!--[if lte IE 8]><link rel="stylesheet" href="assets/css/ie8.css" /><![endif]-->
-    </head>
+    <!--</head>
     <body>
         <div id="page-wrapper">
 
             <!-- Header -->
-            <header id="header">
+            <!--<header id="header">
                 <div class="logo container">
                     <div>
                         <h1><a href="finished.php" id="logo">Finished Case</a></h1>
@@ -27,7 +27,7 @@
             </header>
 
             <!-- Nav -->
-            <nav id="nav">
+            <!--<nav id="nav">
                 <ul>
                     <li><a href="index.php">Search</a></li>
                     <!--<li>
@@ -47,14 +47,14 @@
                             <li><a href="#">Veroeros feugiat</a></li>
                         </ul>
                     </li>-->
-                    <li><a href="crawling.php">Crawling Case</a></li>
+                    <!--<li><a href="crawling.php">Crawling Case</a></li>
                     <!--<li><a href="right-sidebar.php">Right Sidebar</a></li>-->
-                    <li class="current"><a href="finished.php">Finished Case</a></li>
+                    <!--<li class="current"><a href="finished.php">Finished Case</a></li>
                 </ul>
             </nav>
 
             <!-- Main -->
-            <div id="main-wrapper">
+            <!--<div id="main-wrapper">
                 <div id="main" class="container">
                     <div class="row">
                         <div class="12u">
@@ -62,7 +62,7 @@
 
                                 <!-- Content -->
 
-                                <article class="box page-content">
+                                <!--<article class="box page-content">
 
                                     <header>
                                         <h2>可下載的關鍵字</h2>
@@ -71,7 +71,7 @@
                                             <li class="icon fa-clock-o">5 days ago</li>
                                             <li class="icon fa-comments"><a href="#">1,024</a></li>
                                         </ul>-->
-                                    </header>
+                                    <!--</header>
 
                                     <!--<section>
                                         <span class="image featured"><img src="images/pic05.jpg" alt="" /></span>
@@ -119,7 +119,7 @@
                                         </p>
                                     </section>-->
 
-                                </article>
+                                <!--</article>
 
                             </div>
                         </div>
@@ -198,11 +198,11 @@
 
                         </div>
                     </div>-->
-                </div>
+                <!--</div>
             </div>
 
             <!-- Footer -->
-            <footer id="footer" class="container">
+            <!--<footer id="footer" class="container">
                 <!--<div class="row 200%">
                     <div class="12u">
 
@@ -239,7 +239,7 @@
                 </div>
 
                 <!-- Copyright -->
-                <div id="copyright">
+                <!--<div id="copyright">
                     <ul class="menu">
                         <li>&copy; Shota@Flood Fire. All rights reserved</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
                     </ul>
@@ -250,13 +250,13 @@
         </div>
 
         <!-- Scripts -->
-        <script src="assets/js/jquery.min.js"></script>
+        <!--<script src="assets/js/jquery.min.js"></script>
         <script src="assets/js/jquery.dropotron.min.js"></script>
         <script src="assets/js/skel.min.js"></script>
         <script src="assets/js/skel-viewport.min.js"></script>
         <script src="assets/js/util.js"></script>
         <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
-        <script src="assets/js/main.js"></script>
+        <!--<script src="assets/js/main.js"></script>
 
     </body>
 </html>
