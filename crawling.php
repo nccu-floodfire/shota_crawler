@@ -35,7 +35,7 @@ require("crawler/show_case.php");
                 <ul>
                     <li><a href="index.php">Search</a></li>
                     <li class="current"><a href="crawling.php">Crawling Case</a></li>
-                    <!--<li><a href="right-sidebar.php">Right Sidebar</a></li>-->
+                    <li><a href="member/logout.php">Logout</a></li>
                     <!--<li><a href="finished.php">Finished Case</a></li>-->
                 </ul>
             </nav>

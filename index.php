@@ -41,7 +41,7 @@ require("crawler/crawler.php");
                 <ul>
                     <li class="current"><a href="index.php">Search</a></li>
                     <li><a href="crawling.php">Crawling Case</a></li>
-                    <!--<li><a href="Logout">Logout</a></li>-->
+                    <li><a href="member/logout.php">Logout</a></li>
                     <!--<li><a href="finished.php">Finished Case</a></li>-->
                 </ul>
             </nav>

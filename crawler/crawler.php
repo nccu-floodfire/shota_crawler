@@ -28,8 +28,6 @@ class Crawler {
     public $world;         //"世界日報";
     public $europe;        //"歐洲日報";
     public $News_count;    //新聞則數
-// 每個標題頁的url連結(每一頁有很多新聞標題), 沒找到新聞會是null
-//public $news_title, $news_out_title; // (array)國內外新聞標題
 // 登入udn用變數
     public $curl; // 連結udn用
     public $cookieFile; // 連接關閉以後，存放cookie信息的文件名稱
@@ -235,8 +233,6 @@ class Crawler {
 //=====更新這個case的所有新聞Udn_News_URL到資料庫
     public function News_URL_saver($case_id, $URL_list, $IS_LAST_PAGE, $TOTAL_news_count) {
         // 要爬的標題頁url, 這是不是最後一頁標題頁, 新聞總數
-        // 登入udn
-        $this->udn_login();
         // 抓取新聞則數
         curl_setopt($this->curl, CURLOPT_URL, $URL_list);
         curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->cookieFile); // 包含cookie信息的文件名稱。
@@ -267,7 +263,7 @@ class Crawler {
                     //=====找news_id
                     $start = strpos($URL, "&news_id=") + 9;
                     $end = strlen($URL);
-                    $News_ID = (int)substr($URL, $start, $end-$start);
+                    $News_ID = (int) substr($URL, $start, $end - $start);
                     //=====更新Udn_News_URL
                     //echo $URL . "</br>";
                     $query = "INSERT INTO `Udn_News_URL`(`Case_ID`, `URL`, `News_ID`, `DONE`) VALUES ($case_id, '$URL', $News_ID, 0)";
@@ -293,8 +289,6 @@ class Crawler {
                 }
             }
         }
-        // 登出udn
-        $this->udn_logout();
     }
 
 //===========================
@@ -391,6 +385,8 @@ class Crawler {
         if ($this->united == 1 || $this->economic == 1 || $this->minsen == 1 || $this->united_late == 1 || $this->star == 1 || $this->upaper == 1) {
             if ($News_count_in > 0) { // 至少找到一篇新聞
                 $page_in = (int) ($News_count_in / 50) + 1;
+                //=====登入udn
+                $this->udn_login();
                 for ($p = 1; $p <= $page_in; $p++) { // 一頁一頁抓
                     $URL = $this->News_title_link_maker($case_id, $p, 0); // (要還原哪個CASE的URL, 國內報系標題頁的url, 非國外報系) 回傳url
                     if ($p == $page_in) { // 最後一頁標題頁
@@ -400,6 +396,8 @@ class Crawler {
                     }
                     sleep(rand(1, 4)); // 每頁暫停1~4秒
                 }
+                //=====登出udn
+                $this->udn_logout();
                 //echo $page_in;
             }
         }
@@ -407,6 +405,8 @@ class Crawler {
         if ($this->world == 1 || $this->europe == 1) {
             if ($News_count_out > 0) { // 至少找到一篇新聞
                 $page_out = (int) ($News_count_out / 50) + 1;
+                //=====登入udn
+                $this->udn_login();
                 for ($p = 1; $p <= $page_out; $p++) { // 一頁一頁抓
                     $URL_out = $this->News_title_link_maker($case_id, $p, 1); // (要還原哪個CASE的URL, 國外報系標題頁的url, 國外報系) 回傳url
                     if ($p == $page_out) { // 最後一頁標題頁
@@ -416,6 +416,8 @@ class Crawler {
                     }
                     sleep(rand(1, 4)); // 每頁暫停1~4秒
                 }
+                //=====登出udn
+                $this->udn_logout();
                 //echo $page_out;
             }
         }
@@ -426,5 +428,5 @@ class Crawler {
 // test
 //$c = new Crawler;
 //===測試
-//$URL = $c->News_title_link_maker(61, 1, 0); // (要還原哪個CASE的URL, 國內報系第一頁的url, 非國外報系) 回傳url
+//$c->News_URL_saver(1, "http://udndata.com/ndapp/Searchdec2007?udndbid=udndata&page=1&SearchString=%AC%5F%A4%E5%AD%F5%2B%A4%E9%B4%C1%3E%3D20150803%2B%A4%E9%B4%C1%3C%3D20150803&sharepage=50&select=1&kind=2", 1, 7);
 ?>

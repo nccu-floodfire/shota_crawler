@@ -113,7 +113,12 @@ class Show_case {
                 if ($result_2->num_rows > 0) { // 如果有資料
                     $News_finished = $result_2->fetch_assoc();
                     if ( $row['News_count'] != 0 ) {
-                        echo "<th>" . $News_finished['News_finished'] . "(" . (int) ($News_finished['News_finished'] / $row['News_count'] * 100) . "%)</th>";
+                        $percent = (int) ($News_finished['News_finished'] / $row['News_count'] * 100);
+                        if ( $percent == 100 ) { // 代表已完成, 橘色粗體明顯
+                            echo "<th><strong><font color=#FF6600>" . $News_finished['News_finished'] . "(" . $percent . "%)</font></strong></th>";
+                        }else{
+                            echo "<th>" . $News_finished['News_finished'] . "(" . $percent . "%)</th>";
+                        }
                     }else{
                         echo "<th>" . "N/A" . "</th>"; // 分母(新聞則數為0)
                     }
