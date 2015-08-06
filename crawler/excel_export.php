@@ -94,7 +94,7 @@ class Excel_export {
 //===========================
 //=====測試
 $Excel = new Excel_export;
-$Excel->Case_to_Excel(2);
-$Excel->Case_to_Excel(3);
+$Excel->Case_to_Excel(1);
+//$Excel->Case_to_Excel(3);
 ?>
 

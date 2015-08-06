@@ -110,7 +110,11 @@ class News_content {
         $title_doms = $doc->getElementsByTagName('span');
         foreach ($title_doms as $title_dom) {
             if ( $title_dom->getAttribute('class') == "story_title" ) {
-                $Story_Title = $Story_Title . $title_dom->nodeValue . " "; //Story_Title可能有一行以上, 用空白隔開
+                if ($Story_Title == NULL) { // 第一行Story_Title
+                    $Story_Title = $Story_Title . $title_dom->nodeValue;
+                }else{
+                    $Story_Title = $Story_Title . " " . $title_dom->nodeValue; //Story_Title可能有一行以上, 用空白隔開
+                } 
             }
         }
     //=====找Story_Author作者
@@ -127,14 +131,18 @@ class News_content {
                 $Text = $Text .  $News_dom->nodeValue;
             }
         }
-        //去掉空白(半全形), 換行
-        $Text = str_replace (" ","",$Text); // (取代前的字串,取代後字串,要取代的字串)
+        //去掉不要的字元, 換行(有可能有英文, 所以空白不能去除)
+        //$Text = str_replace (" ","",$Text); // (取代前的字串,取代後字串,要取代的字串)
         $Text = str_replace ("	","",$Text);
         $Text = str_replace ("\n","",$Text);
     //=====從Text中抓取 報紙, 版號, 種類
-        $start = strpos($Text, "【") + 3; // 因為【佔3個字元
-        $end = strpos($Text, "】");
-        $Sub_Text = substr($Text, $start, $end-$start);
+        // strpos 找出字串A在字串B中第一次出現的位置
+        // mb_strrchr 找出字串A在字串B中最後一次出現的位置, 並回傳該位置到字串結尾的所有字 (可處理) Multibyte
+        $Sub_Text = mb_strrchr($Text, "【");
+        $start = mb_strpos($Sub_Text, "【") + 3; // 因為【佔3個字元
+        $end = mb_strpos($Sub_Text, "】");
+        // substr 函數取得部分字串，可設定字串長度
+        $Sub_Text = mb_substr($Sub_Text, $start, $end-$start);
         $Sub_Text = explode("/",$Sub_Text);
         $News_Date = $Sub_Text[0];  // 新聞報導時間
         $Newspaper = $Sub_Text[1];  // 報紙
@@ -216,11 +224,13 @@ class News_content {
 //===========================
 //=====啟動此程式
 $s = new News_content;
-$s->News_Saver();
+//$s->News_Saver();
 //=====測試
 //=====登入udn
-//$s->udn_login();
-//$s->News_Saver();
-//$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=367&page=37&udndbid=udn_abord&SearchString=tW6kcyuz%2BKdPPaVArMmk6bP4fLzarHek6bP4&sharepage=10&select=1&kind=2&article_date=2000-03-08&news_id=46466",46466);//=====登出udn
-//$s->udn_logout();
+$s->udn_login();
+//$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=367&page=37&udndbid=udn_abord&SearchString=tW6kcyuz%2BKdPPaVArMmk6bP4fLzarHek6bP4&sharepage=10&select=1&kind=2&article_date=2000-03-08&news_id=46466",46466);
+//$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=50&page=1&udndbid=udndata&SearchString=vdK69Suk6bTBPj0yMDE1MDcwNiuk6bTBPD0yMDE1MDgwNA%3D%3D&sharepage=50&select=1&kind=3&article_date=2015-08-03&news_id=8066051",8066051);
+$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=13&page=2&udndbid=today&SearchString=rF%2Bk5a31K6TptME%2BPTIwMTUwODA2K6TptME8PTIwMTUwODA2&sharepage=10&select=1&kind=2&article_date=2015-08-06&news_id=8069558",8069558);
+//=====登出udn
+$s->udn_logout();
 ?>
