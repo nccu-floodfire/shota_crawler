@@ -89,65 +89,81 @@ class News_content {
         $Crawl_Time = date('Y-m-d H:i:s'); // 抓取本則news的時間
         $News_Date = NULL;      // 新聞報導時間
         $Story_Title = NULL;    // 標題
+        $Story_Sub_Title = NULL;// 副標題
         $Story_Author = NULL;   // 作者
         $Text = NULL;           // 新聞內文
         $Newspaper = NULL;      // 報紙
         $Page = NULL;           // 版號
         $Category = NULL;       // 種類
-        //=====爬資料
-        // 抓取新聞則數
+    //=====爬資料
         curl_setopt($this->curl, CURLOPT_URL, $URL);
         curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->cookieFile); // 包含cookie信息的文件名稱。
         curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
         curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($this->curl, CURLOPT_STDERR, $this->errlogFile);
         $html = curl_exec($this->curl);
-        
+
         //$html = file_get_contents('haha.html'); // 先嘗試用文本抓
         $doc = new DOMDocument;
         @$doc->loadHTML($html); // @忽略此行warning
     //=====找Story_Title標題
         $title_doms = $doc->getElementsByTagName('span');
         foreach ($title_doms as $title_dom) {
-            if ( $title_dom->getAttribute('class') == "story_title" ) {
+            if ($title_dom->getAttribute('class') == "story_title") {
                 if ($Story_Title == NULL) { // 第一行Story_Title
                     $Story_Title = $Story_Title . $title_dom->nodeValue;
-                }else{
+                } else {
                     $Story_Title = $Story_Title . " " . $title_dom->nodeValue; //Story_Title可能有一行以上, 用空白隔開
-                } 
+                }
+            }
+        }
+    //=====找story_sub_title副標題
+        $sub_title_doms = $doc->getElementsByTagName('span');
+        foreach ($sub_title_doms as $sub_title_dom) {
+            if ($sub_title_dom->getAttribute('class') == "story_sub_title") {
+                if ($Story_Sub_Title == NULL) { // 第一行Story_Sub_Title
+                    $Story_Sub_Title = $Story_Sub_Title . $sub_title_dom->nodeValue;
+                } else {
+                    $Story_Sub_Title = $Story_Sub_Title . " " . $sub_title_dom->nodeValue;
+                    //Story_Sub_Title有一行以上的話, 用空白隔開
+                }
             }
         }
     //=====找Story_Author作者
         $Author_doms = $doc->getElementsByTagName('td');
         foreach ($Author_doms as $Author_dom) {
-            if ( $Author_dom->getAttribute('class') == "story_author" ) {
+            if ($Author_dom->getAttribute('class') == "story_author") {
                 $Story_Author = $Story_Author . $Author_dom->nodeValue;
             }
         }
-    //=====找新聞內文, 報紙, 版號, 種類
+        /* Please note that all the discussion about mb_str_replace in the comments is pretty pointless.
+         * str_replace works just fine with multibyte strings: */
+        $Story_Author = str_replace("【", "", $Story_Author); // 去除不要的字元
+        $Story_Author = str_replace("】", "", $Story_Author);
+    //=====找新聞內文
         $News_doms = $doc->getElementsByTagName('td');
         foreach ($News_doms as $News_dom) {
-            if ( $News_dom->getAttribute('class') == "story" ) {
-                $Text = $Text .  $News_dom->nodeValue;
+            if ($News_dom->getAttribute('class') == "story") {
+                $Text = $Text . $News_dom->nodeValue;
             }
         }
         //去掉不要的字元, 換行(有可能有英文, 所以空白不能去除)
         //$Text = str_replace (" ","",$Text); // (取代前的字串,取代後字串,要取代的字串)
-        $Text = str_replace ("	","",$Text);
-        $Text = str_replace ("\n","",$Text);
-    //=====從Text中抓取 報紙, 版號, 種類
+        $Text = str_replace("	", "", $Text);
+        $Text = str_replace("\n", "", $Text);
+    //=====從Text中抓取 新聞報導時間, 報紙, 版號, 種類
         // strpos 找出字串A在字串B中第一次出現的位置
         // mb_strrchr 找出字串A在字串B中最後一次出現的位置, 並回傳該位置到字串結尾的所有字 (可處理) Multibyte
         $Sub_Text = mb_strrchr($Text, "【");
         $start = mb_strpos($Sub_Text, "【") + 3; // 因為【佔3個字元
         $end = mb_strpos($Sub_Text, "】");
         // substr 函數取得部分字串，可設定字串長度
-        $Sub_Text = mb_substr($Sub_Text, $start, $end-$start);
-        $Sub_Text = explode("/",$Sub_Text);
+        $Sub_Text = mb_substr($Sub_Text, $start, $end - $start);
+        $Sub_Text = explode("/", $Sub_Text);
         $News_Date = $Sub_Text[0];  // 新聞報導時間
         $Newspaper = $Sub_Text[1];  // 報紙
         $Page = $Sub_Text[2];       // 版號
-        $Category =  $Sub_Text[3];  //種類
+        $Category = $Sub_Text[3];  //種類
 //==============記得轉utf8(目前轉會有錯誤, 忽略錯誤會回傳空值, 不轉直接存資料庫目前沒有問題)
         //$News_Date = iconv("big5", "UTF-8//TRANSLIT//IGNORE", $News_Date);
         //@$Story_Title = iconv("big5", "UTF-8//TRANSLIT//IGNORE", $Story_Title);
@@ -159,7 +175,7 @@ class News_content {
         //=====登入資料庫
         $this->DB_link();
         //=====把新聞資料存入資料庫
-        $query = "INSERT INTO `Udn_News_Content`(`News_ID`, `Crawl_Time`, `Date`, `story_title`, `story_author`, `text`, `newspaper`, `page`, `category`) VALUES ($News_ID, '$Crawl_Time', '$News_Date', '$Story_Title', '$Story_Author', '$Text', '$Newspaper', '$Page', '$Category')";
+        $query = "INSERT INTO `Udn_News_Content`(`News_ID`, `Crawl_Time`, `Date`, `story_title`, `story_sub_title`, `story_author`, `text`, `newspaper`, `page`, `category`) VALUES ($News_ID, '$Crawl_Time', '$News_Date', '$Story_Title', '$Story_Sub_Title', '$Story_Author', '$Text', '$Newspaper', '$Page', '$Category')";
         $result = $this->mysqli->query($query) or die($this->mysqli->error . __LINE__);
         //=====登出資料庫
         $this->DB_unlink();
@@ -177,11 +193,11 @@ class News_content {
         $URL_Case = $result->fetch_assoc();
         //=====登出資料庫
         $this->DB_unlink();
-     //=====如果所有的Case都抓完了, 直接結束程式
+        //=====如果所有的Case都抓完了, 直接結束程式
         if (empty($URL_Case)) {
             exit;
         }
-    //=====
+        //=====
         $Case_ID = $URL_Case['Case_ID'];
         //=====登入資料庫
         $this->DB_link();
@@ -230,7 +246,7 @@ $s = new News_content;
 $s->udn_login();
 //$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=367&page=37&udndbid=udn_abord&SearchString=tW6kcyuz%2BKdPPaVArMmk6bP4fLzarHek6bP4&sharepage=10&select=1&kind=2&article_date=2000-03-08&news_id=46466",46466);
 //$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=50&page=1&udndbid=udndata&SearchString=vdK69Suk6bTBPj0yMDE1MDcwNiuk6bTBPD0yMDE1MDgwNA%3D%3D&sharepage=50&select=1&kind=3&article_date=2015-08-03&news_id=8066051",8066051);
-$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=13&page=2&udndbid=today&SearchString=rF%2Bk5a31K6TptME%2BPTIwMTUwODA2K6TptME8PTIwMTUwODA2&sharepage=10&select=1&kind=2&article_date=2015-08-06&news_id=8069558",8069558);
+$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=2&page=1&udndbid=today&SearchString=rF%2Bk5a31K6TptME%2BPTIwMTUwODA2K6TptME8PTIwMTUwODA2&sharepage=10&select=1&kind=2&article_date=2015-08-06&news_id=8069776",8069776);
 //=====登出udn
 $s->udn_logout();
 ?>

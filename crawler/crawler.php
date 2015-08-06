@@ -232,8 +232,7 @@ class Crawler {
 //===========================
 //=====更新這個case的所有新聞Udn_News_URL到資料庫
     public function News_URL_saver($case_id, $URL_list, $IS_LAST_PAGE, $TOTAL_news_count) {
-        // 要爬的標題頁url, 這是不是最後一頁標題頁, 新聞總數
-        // 抓取新聞則數
+        // 哪一個Case, 要爬的標題頁url, 這是不是最後一頁標題頁, 新聞總數
         curl_setopt($this->curl, CURLOPT_URL, $URL_list);
         curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->cookieFile); // 包含cookie信息的文件名稱。
         curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
