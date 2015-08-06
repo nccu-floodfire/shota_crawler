@@ -89,13 +89,13 @@ class News_content {
         $Crawl_Time = date('Y-m-d H:i:s'); // 抓取本則news的時間
         $News_Date = NULL;      // 新聞報導時間
         $Story_Title = NULL;    // 標題
-        $Story_Sub_Title = NULL;// 副標題
+        $Story_Sub_Title = NULL; // 副標題
         $Story_Author = NULL;   // 作者
         $Text = NULL;           // 新聞內文
         $Newspaper = NULL;      // 報紙
         $Page = NULL;           // 版號
         $Category = NULL;       // 種類
-    //=====爬資料
+        //=====爬資料
         curl_setopt($this->curl, CURLOPT_URL, $URL);
         curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->cookieFile); // 包含cookie信息的文件名稱。
         curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
@@ -106,7 +106,7 @@ class News_content {
         //$html = file_get_contents('haha.html'); // 先嘗試用文本抓
         $doc = new DOMDocument;
         @$doc->loadHTML($html); // @忽略此行warning
-    //=====找Story_Title標題
+        //=====找Story_Title標題
         $title_doms = $doc->getElementsByTagName('span');
         foreach ($title_doms as $title_dom) {
             if ($title_dom->getAttribute('class') == "story_title") {
@@ -117,7 +117,7 @@ class News_content {
                 }
             }
         }
-    //=====找story_sub_title副標題
+        //=====找story_sub_title副標題
         $sub_title_doms = $doc->getElementsByTagName('span');
         foreach ($sub_title_doms as $sub_title_dom) {
             if ($sub_title_dom->getAttribute('class') == "story_sub_title") {
@@ -129,7 +129,7 @@ class News_content {
                 }
             }
         }
-    //=====找Story_Author作者
+        //=====找Story_Author作者
         $Author_doms = $doc->getElementsByTagName('td');
         foreach ($Author_doms as $Author_dom) {
             if ($Author_dom->getAttribute('class') == "story_author") {
@@ -140,18 +140,28 @@ class News_content {
          * str_replace works just fine with multibyte strings: */
         $Story_Author = str_replace("【", "", $Story_Author); // 去除不要的字元
         $Story_Author = str_replace("】", "", $Story_Author);
-    //=====找新聞內文
+        //=====找新聞內文
         $News_doms = $doc->getElementsByTagName('td');
+        // ↑先找整個文章裡的td
         foreach ($News_doms as $News_dom) {
             if ($News_dom->getAttribute('class') == "story") {
-                $Text = $Text . $News_dom->nodeValue;
+                // ↑找整個文章裡的td且class是story(目前就一個)
+                $News_Parts = $News_dom->getElementsByTagName('p');
+                // ↑再找這整個文章中所有的p
+                foreach ($News_Parts as $News_Part) {
+                    if ($Text == NULL) {
+                        $Text = $Text . $News_Part->nodeValue;
+                    }else if( !empty($News_Part->nodeValue) ){ // 把文章分段
+                        $Text = $Text . "\n" . $News_Part->nodeValue;
+                    }
+                }
             }
         }
         //去掉不要的字元, 換行(有可能有英文, 所以空白不能去除)
-        //$Text = str_replace (" ","",$Text); // (取代前的字串,取代後字串,要取代的字串)
-        $Text = str_replace("	", "", $Text);
-        $Text = str_replace("\n", "", $Text);
-    //=====從Text中抓取 新聞報導時間, 報紙, 版號, 種類
+        //$Text = str_replace(" ", NULL, $Text); // (取代前的字串,取代後字串,要取代的字串)
+        //$Text = str_replace("	", NULL, $Text);
+        //$Text = str_replace("\n", "", $Text);
+        //=====從Text中抓取 新聞報導時間, 報紙, 版號, 種類
         // strpos 找出字串A在字串B中第一次出現的位置
         // mb_strrchr 找出字串A在字串B中最後一次出現的位置, 並回傳該位置到字串結尾的所有字 (可處理) Multibyte
         $Sub_Text = mb_strrchr($Text, "【");
@@ -164,6 +174,10 @@ class News_content {
         $Newspaper = $Sub_Text[1];  // 報紙
         $Page = $Sub_Text[2];       // 版號
         $Category = $Sub_Text[3];  //種類
+        //=====處理本文(去除上述四項欄位
+        $Text = mb_substr( $Text, 0, strpos( $Text, mb_strrchr($Text, "【") ) );
+        //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
+        $Text = addslashes($Text);
 //==============記得轉utf8(目前轉會有錯誤, 忽略錯誤會回傳空值, 不轉直接存資料庫目前沒有問題)
         //$News_Date = iconv("big5", "UTF-8//TRANSLIT//IGNORE", $News_Date);
         //@$Story_Title = iconv("big5", "UTF-8//TRANSLIT//IGNORE", $Story_Title);
@@ -244,9 +258,9 @@ $s = new News_content;
 //=====測試
 //=====登入udn
 $s->udn_login();
-//$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=367&page=37&udndbid=udn_abord&SearchString=tW6kcyuz%2BKdPPaVArMmk6bP4fLzarHek6bP4&sharepage=10&select=1&kind=2&article_date=2000-03-08&news_id=46466",46466);
-//$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=50&page=1&udndbid=udndata&SearchString=vdK69Suk6bTBPj0yMDE1MDcwNiuk6bTBPD0yMDE1MDgwNA%3D%3D&sharepage=50&select=1&kind=3&article_date=2015-08-03&news_id=8066051",8066051);
-$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=2&page=1&udndbid=today&SearchString=rF%2Bk5a31K6TptME%2BPTIwMTUwODA2K6TptME8PTIwMTUwODA2&sharepage=10&select=1&kind=2&article_date=2015-08-06&news_id=8069776",8069776);
+$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=367&page=37&udndbid=udn_abord&SearchString=tW6kcyuz%2BKdPPaVArMmk6bP4fLzarHek6bP4&sharepage=10&select=1&kind=2&article_date=2000-03-08&news_id=46466",46466);
+$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=50&page=1&udndbid=udndata&SearchString=vdK69Suk6bTBPj0yMDE1MDcwNiuk6bTBPD0yMDE1MDgwNA%3D%3D&sharepage=50&select=1&kind=3&article_date=2015-08-03&news_id=8066051", 8066051);
+$s->One_News_Crawler("http://udndata.com/ndapp/Story2007?no=56&page=2&udndbid=udndata&SearchString=cGFyYWdyYXBo&sharepage=50&select=1&kind=2&article_date=1961-07-06&news_id=105653866",105653866);
 //=====登出udn
 $s->udn_logout();
 ?>
