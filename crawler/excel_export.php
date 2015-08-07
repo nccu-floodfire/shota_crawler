@@ -54,15 +54,16 @@ class Excel_export {
                 ->setCellValue('B1', 'News_ID')
                 ->setCellValue('C1', 'Date')
                 ->setCellValue('D1', 'story_title')
-                ->setCellValue('E1', 'story_author')
-                ->setCellValue('F1', 'text')
-                ->setCellValue('G1', 'newspaper')
-                ->setCellValue('H1', 'page')
-                ->setCellValue('I1', 'category');
+                ->setCellValue('E1', 'story_sub_title')
+                ->setCellValue('F1', 'story_author')
+                ->setCellValue('G1', 'text')
+                ->setCellValue('H1', 'newspaper')
+                ->setCellValue('I1', 'page')
+                ->setCellValue('J1', 'category');
         //==========連線
         $this->DB_link();
         //==========查詢
-        $query = "SELECT `Udn_News_URL`.`URL`,`Udn_News_Content`.`News_ID`,`Udn_News_Content`.`Date`,`Udn_News_Content`.`story_title`,`Udn_News_Content`.`story_author`,`Udn_News_Content`.`text`,`Udn_News_Content`.`newspaper`,`Udn_News_Content`.`page`,`Udn_News_Content`.`category` FROM `Udn_News_URL`,`Udn_News_Content` WHERE `Udn_News_URL`.`Case_ID` = $Case_ID AND `Udn_News_URL`.`News_ID` = `Udn_News_Content`.`News_ID`";
+        $query = "SELECT `Udn_News_URL`.`URL`,`Udn_News_Content`.`News_ID`,`Udn_News_Content`.`Date`,`Udn_News_Content`.`story_title`,`Udn_News_Content`.`story_sub_title`,`Udn_News_Content`.`story_author`,`Udn_News_Content`.`text`,`Udn_News_Content`.`newspaper`,`Udn_News_Content`.`page`,`Udn_News_Content`.`category` FROM `Udn_News_URL`,`Udn_News_Content` WHERE `Udn_News_URL`.`Case_ID` = $Case_ID AND `Udn_News_URL`.`News_ID` = `Udn_News_Content`.`News_ID`";
         $result = $this->mysqli->query($query) or die($this->mysqli->error . __LINE__);
         $start = 0;
         if ($result->num_rows > 0) { // 如果有資料
@@ -73,11 +74,12 @@ class Excel_export {
                         ->setCellValue('B' . $next, $row['News_ID'])
                         ->setCellValue('C' . $next, $row['Date'])
                         ->setCellValue('D' . $next, $row['story_title'])
-                        ->setCellValue('E' . $next, $row['story_author'])
-                        ->setCellValue('F' . $next, $row['text'])
-                        ->setCellValue('G' . $next, $row['newspaper'])
-                        ->setCellValue('H' . $next, $row['page'])
-                        ->setCellValue('I' . $next, $row['category']);
+                        ->setCellValue('E' . $next, $row['story_sub_title'])
+                        ->setCellValue('F' . $next, $row['story_author'])
+                        ->setCellValue('G' . $next, $row['text'])
+                        ->setCellValue('H' . $next, $row['newspaper'])
+                        ->setCellValue('I' . $next, $row['page'])
+                        ->setCellValue('J' . $next, $row['category']);
                 $start++;
             }
         }
@@ -87,6 +89,7 @@ class Excel_export {
         $objPHPExcel->setActiveSheetIndex(0);
         $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
         $objWriter->save($file_name . ".xlsx"); // 檔名
+        //$objWriter->save('php://output');
     }
 
 }

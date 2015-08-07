@@ -231,8 +231,8 @@ class Crawler {
 
 //===========================
 //=====更新這個case的所有新聞Udn_News_URL到資料庫
-    public function News_URL_saver($case_id, $URL_list, $IS_LAST_PAGE, $TOTAL_news_count) {
-        // 哪一個Case, 要爬的標題頁url, 這是不是最後一頁標題頁, 新聞總數
+    public function News_URL_saver($case_id, $URL_list, $IS_LAST_PAGE, $TOTAL_news_count, $Today_Case) {
+        // 哪一個Case, 要爬的標題頁url, 這是不是最後一頁標題頁, 新聞總數, 是不是今天要抓的Case
         curl_setopt($this->curl, CURLOPT_URL, $URL_list);
         curl_setopt($this->curl, CURLOPT_COOKIEFILE, $this->cookieFile); // 包含cookie信息的文件名稱。
         curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
@@ -265,7 +265,11 @@ class Crawler {
                     $News_ID = (int) substr($URL, $start, $end - $start);
                     //=====更新Udn_News_URL
                     //echo $URL . "</br>";
-                    $query = "INSERT INTO `Udn_News_URL`(`Case_ID`, `URL`, `News_ID`, `DONE`) VALUES ($case_id, '$URL', $News_ID, 0)";
+                    if ($Today_Case == TRUE) { // 是不是今天要抓的Case
+                        $query = "INSERT INTO `Udn_News_URL`(`Case_ID`, `URL`, `News_ID`, `DONE`, `Today_Case`) VALUES ($case_id, '$URL', $News_ID, 0, 1)";
+                    } else {
+                        $query = "INSERT INTO `Udn_News_URL`(`Case_ID`, `URL`, `News_ID`, `DONE`, `Today_Case`) VALUES ($case_id, '$URL', $News_ID, 0, 0)";
+                    }
                     $result = $this->mysqli->query($query) or die($this->mysqli->error . __LINE__);
                     //=====登出資料庫
                     $this->DB_unlink();
@@ -389,9 +393,19 @@ class Crawler {
                 for ($p = 1; $p <= $page_in; $p++) { // 一頁一頁抓
                     $URL = $this->News_title_link_maker($case_id, $p, 0); // (要還原哪個CASE的URL, 國內報系標題頁的url, 非國外報系) 回傳url
                     if ($p == $page_in) { // 最後一頁標題頁
-                        $this->News_URL_saver($case_id, $URL, TRUE, $News_count_in); // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國內新聞總數) 存進資料庫
+                        if ($this->end == date('Ymd') && $this->start == date('Ymd')) {// 搜尋範圍是今天的case
+                            $this->News_URL_saver($case_id, $URL, TRUE, $News_count_in, TRUE);
+                            // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國內新聞總數, 是不是今天的case) 存進資料庫
+                        } else {
+                            $this->News_URL_saver($case_id, $URL, TRUE, $News_count_in, FALSE);
+                        }
                     } else {
-                        $this->News_URL_saver($case_id, $URL, FALSE, $News_count_in); // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國內新聞總數) 存進資料庫
+                        if ($this->end == date('Ymd') && $this->start == date('Ymd')) {// 搜尋範圍是今天的case
+                            $this->News_URL_saver($case_id, $URL, FALSE, $News_count_in, TRUE);
+                            // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國內新聞總數, 是不是今天的case) 存進資料庫
+                        } else {
+                            $this->News_URL_saver($case_id, $URL, FALSE, $News_count_in, FALSE);
+                        }
                     }
                     sleep(rand(1, 4)); // 每頁暫停1~4秒
                 }
@@ -409,9 +423,19 @@ class Crawler {
                 for ($p = 1; $p <= $page_out; $p++) { // 一頁一頁抓
                     $URL_out = $this->News_title_link_maker($case_id, $p, 1); // (要還原哪個CASE的URL, 國外報系標題頁的url, 國外報系) 回傳url
                     if ($p == $page_out) { // 最後一頁標題頁
-                        $this->News_URL_saver($case_id, $URL_out, TRUE, $News_count_out); // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國外新聞總數) 存進資料庫
+                        if ($this->end == date('Ymd') && $this->start == date('Ymd')) {// 搜尋範圍是今天的case
+                            $this->News_URL_saver($case_id, $URL, TRUE, $News_count_out, TRUE);
+                            // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國內新聞總數, 是不是今天的case) 存進資料庫
+                        } else {
+                            $this->News_URL_saver($case_id, $URL, TRUE, $News_count_out, FALSE);
+                        }
                     } else {
-                        $this->News_URL_saver($case_id, $URL_out, FALSE, $News_count_out); // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國外新聞總數) 存進資料庫
+                        if ($this->end == date('Ymd') && $this->start == date('Ymd')) {// 搜尋範圍是今天的case
+                            $this->News_URL_saver($case_id, $URL, FALSE, $News_count_out, TRUE);
+                            // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國內新聞總數, 是不是今天的case) 存進資料庫
+                        } else {
+                            $this->News_URL_saver($case_id, $URL, FALSE, $News_count_out, FALSE);
+                        }
                     }
                     sleep(rand(1, 4)); // 每頁暫停1~4秒
                 }

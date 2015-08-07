@@ -1,6 +1,7 @@
 <?php
 
-// 抓取每則新聞內容用
+// 由於使用者查詢今天的新聞, 每則新聞的url連結會在隔天失效, 所以要盡快抓!!
+// 抓取每則新聞內容用(today only)
 // 需要排班程式輔助!!
 //===========================
 session_start();
@@ -151,7 +152,7 @@ class News_content {
                 foreach ($News_Parts as $News_Part) {
                     if ($Text == NULL) {
                         $Text = $Text . $News_Part->nodeValue;
-                    }else if( !empty($News_Part->nodeValue) ){ // 把文章分段
+                    } else if (!empty($News_Part->nodeValue)) { // 把文章分段
                         //$Text = $Text . "\n" . $News_Part->nodeValue;
                         $Text = $Text . $News_Part->nodeValue;
                     }
@@ -176,7 +177,7 @@ class News_content {
         $Page = $Sub_Text[2];       // 版號
         $Category = $Sub_Text[3];  //種類
         //=====處理本文(去除上述四項欄位
-        $Text = mb_substr( $Text, 0, strpos( $Text, mb_strrchr($Text, "【") ) );
+        $Text = mb_substr($Text, 0, strpos($Text, mb_strrchr($Text, "【")));
         //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
         $Text = addslashes($Text);
 //==============記得轉utf8(目前轉會有錯誤, 忽略錯誤會回傳空值, 不轉直接存資料庫目前沒有問題)
@@ -202,8 +203,8 @@ class News_content {
     public function News_Saver() {
         //=====登入資料庫
         $this->DB_link();
-        //=====先從Udn_News_URL表中尋找出Case_ID最前面(最小)的Case_ID
-        $query = "SELECT `Case_ID` FROM `Udn_News_URL` WHERE `DONE` = 0 LIMIT 0, 1";
+    //=====再從Udn_News_URL表中尋找出Case_ID最前面(最小)的Case_ID, 並且必須是今天的Case
+        $query = "SELECT `Case_ID` FROM `Udn_News_URL` WHERE `Today_Case` = 1 AND `DONE` = 0 LIMIT 0, 1";
         $result = $this->mysqli->query($query) or die($this->mysqli->error . __LINE__);
         $URL_Case = $result->fetch_assoc();
         //=====登出資料庫
@@ -249,7 +250,6 @@ class News_content {
         //=====登出udn
         $this->udn_logout();
     }
-
 }
 
 //===========================
