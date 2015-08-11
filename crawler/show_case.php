@@ -108,21 +108,26 @@ class Show_case {
                 echo "<th>" . $row['News_count'] . "</th>";
                 //"目前已抓取數"用算的
                 $case_id = $row['Case_ID'];
+                $SearchString = $row['SearchString'];
                 $query_2 = "SELECT COUNT(*) AS News_finished FROM `Udn_News_URL` WHERE `Case_ID` = $case_id AND `DONE` = 1";
                 $result_2 = $this->mysqli->query($query_2) or die($this->mysqli->error . __LINE__);
                 if ($result_2->num_rows > 0) { // 如果有資料
                     $News_finished = $result_2->fetch_assoc();
-                    if ( $row['News_count'] != 0 ) {
+                    if ($row['News_count'] != 0) {
                         $percent = (int) ($News_finished['News_finished'] / $row['News_count'] * 100);
-                        if ( $percent == 100 ) { // 代表已完成, 橘色粗體明顯, 並且提供下載excel的連結
-                            echo "<th><strong><font color=#FF6600><a href='http://140.119.164.218/~shota/udn_crawler/crawler/excel_export.php' target='_blank'>" . $News_finished['News_finished'] . "(" . $percent . "%)</a></font></strong></th>";
-                        }else{
+                        if ($percent == 100) { // 代表已完成, 橘色粗體明顯, 並且提供下載excel的連結
+                            //==========因為如果在excel.export.php連結資料庫, 匯出的.xlsx檔會打不開
+                            //$query_3 = "SELECT `Udn_News_URL`.`URL`,`Udn_News_Content`.`News_ID`,`Udn_News_Content`.`Date`,`Udn_News_Content`.`story_title`,`Udn_News_Content`.`story_sub_title`,`Udn_News_Content`.`story_author`,`Udn_News_Content`.`text`,`Udn_News_Content`.`newspaper`,`Udn_News_Content`.`page`,`Udn_News_Content`.`category` FROM `Udn_News_URL`,`Udn_News_Content` WHERE `Udn_News_URL`.`Case_ID` = $case_id AND `Udn_News_URL`.`News_ID` = `Udn_News_Content`.`News_ID`";
+                            //$result_3 = $this->mysqli->query($query_3) or die($this->mysqli->error . __LINE__);
+                            //echo "<th>" . gettype($result_3) . "</th>";
+                            echo "<th><strong><font color=#FF6600><a href='http://140.119.164.218/~shota/udn_crawler/crawler/excel_export.php?Case_ID=$case_id&SearchString=$SearchString' target='_blank'>" . $News_finished['News_finished'] . "(" . $percent . "%)</a></font></strong></th>";
+                        } else {
                             echo "<th>" . $News_finished['News_finished'] . "(" . $percent . "%)</th>";
                         }
-                    }else{
+                    } else {
                         echo "<th>" . "N/A" . "</th>"; // 分母(新聞則數為0)
                     }
-                }else{
+                } else {
                     echo "<th>" . "錯誤" . "</th>";
                 }
                 echo "<th>" . $row['start'] . "</th>";
