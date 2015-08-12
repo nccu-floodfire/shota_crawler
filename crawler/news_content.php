@@ -117,6 +117,8 @@ class News_content {
                 }
             }
         }
+        //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
+        $Story_Title = addslashes($Story_Title);
         //=====找story_sub_title副標題
         $sub_title_doms = $doc->getElementsByTagName('span');
         foreach ($sub_title_doms as $sub_title_dom) {
@@ -129,6 +131,8 @@ class News_content {
                 }
             }
         }
+        //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
+        $Story_Sub_Title = addslashes($Story_Sub_Title);
         //=====找Story_Author作者
         $Author_doms = $doc->getElementsByTagName('td');
         foreach ($Author_doms as $Author_dom) {
@@ -136,6 +140,8 @@ class News_content {
                 $Story_Author = $Story_Author . $Author_dom->nodeValue;
             }
         }
+        //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
+        $Story_Author = addslashes($Story_Author);
         /* Please note that all the discussion about mb_str_replace in the comments is pretty pointless.
          * str_replace works just fine with multibyte strings: */
         $Story_Author = str_replace("【", "", $Story_Author); // 去除不要的字元
