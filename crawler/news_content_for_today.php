@@ -165,6 +165,8 @@ class News_content {
                 }
             }
         }
+        //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
+        $Text = addslashes($Text);
         //去掉不要的字元, 換行(有可能有英文, 所以空白不能去除)
         //$Text = str_replace(" ", NULL, $Text); // (取代前的字串,取代後字串,要取代的字串)
         //$Text = str_replace("	", NULL, $Text);
@@ -184,8 +186,6 @@ class News_content {
         $Category = $Sub_Text[3];  //種類
         //=====處理本文(去除上述四項欄位
         $Text = mb_substr($Text, 0, strpos($Text, mb_strrchr($Text, "【")));
-        //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
-        $Text = addslashes($Text);
 //==============記得轉utf8(目前轉會有錯誤, 忽略錯誤會回傳空值, 不轉直接存資料庫目前沒有問題)
         //$News_Date = iconv("big5", "UTF-8//TRANSLIT//IGNORE", $News_Date);
         //@$Story_Title = iconv("big5", "UTF-8//TRANSLIT//IGNORE", $Story_Title);
@@ -209,7 +209,7 @@ class News_content {
     public function News_Saver() {
         //=====登入資料庫
         $this->DB_link();
-    //=====再從Udn_News_URL表中尋找出Case_ID最前面(最小)的Case_ID, 並且必須是今天的Case
+        //=====再從Udn_News_URL表中尋找出Case_ID最前面(最小)的Case_ID, 並且必須是今天的Case
         $query = "SELECT `Case_ID` FROM `Udn_News_URL` WHERE `Today_Case` = 1 AND `DONE` = 0 LIMIT 0, 1";
         $result = $this->mysqli->query($query) or die($this->mysqli->error . __LINE__);
         $URL_Case = $result->fetch_assoc();
@@ -256,6 +256,7 @@ class News_content {
         //=====登出udn
         $this->udn_logout();
     }
+
 }
 
 //===========================

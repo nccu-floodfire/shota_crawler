@@ -157,13 +157,15 @@ class News_content {
                 foreach ($News_Parts as $News_Part) {
                     if ($Text == NULL) {
                         $Text = $Text . $News_Part->nodeValue;
-                    }else if( !empty($News_Part->nodeValue) ){ // 把文章分段
+                    } else if (!empty($News_Part->nodeValue)) { // 把文章分段
                         //$Text = $Text . "\n" . $News_Part->nodeValue;
                         $Text = $Text . $News_Part->nodeValue;
                     }
                 }
             }
         }
+        //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
+        $Text = addslashes($Text);
         //去掉不要的字元, 換行(有可能有英文, 所以空白不能去除)
         //$Text = str_replace(" ", NULL, $Text); // (取代前的字串,取代後字串,要取代的字串)
         //$Text = str_replace("	", NULL, $Text);
@@ -182,9 +184,7 @@ class News_content {
         $Page = $Sub_Text[2];       // 版號
         $Category = $Sub_Text[3];  //種類
         //=====處理本文(去除上述四項欄位
-        $Text = mb_substr( $Text, 0, strpos( $Text, mb_strrchr($Text, "【") ) );
-        //=====處理特殊字元(加上跳脫字元, 不然資料庫不給存
-        $Text = addslashes($Text);
+        $Text = mb_substr($Text, 0, strpos($Text, mb_strrchr($Text, "【")));
 //==============記得轉utf8(目前轉會有錯誤, 忽略錯誤會回傳空值, 不轉直接存資料庫目前沒有問題)
         //$News_Date = iconv("big5", "UTF-8//TRANSLIT//IGNORE", $News_Date);
         //@$Story_Title = iconv("big5", "UTF-8//TRANSLIT//IGNORE", $Story_Title);
