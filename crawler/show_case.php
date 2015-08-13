@@ -67,7 +67,7 @@ class Show_case {
         //==========連線
         $this->DB_link();
         //==========Query case表
-        $query = "SELECT * FROM `Udn_Case` WHERE 1";
+        $query = "SELECT * FROM `Udn_Case` ORDER BY `Case_ID` ASC";
         $result = $this->mysqli->query($query) or die($this->mysqli->error . __LINE__);
         //==========Show
         echo "<strong>目前抓取速度為<font color=#FF6600>每半小時100則，先查先抓，請耐心等候，謝謝!!</font></br>";
