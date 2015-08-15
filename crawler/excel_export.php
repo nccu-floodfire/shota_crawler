@@ -3,11 +3,6 @@
 //===========================檔名
 $file_name = "Case_ID_" . (string) $_GET['Case_ID'] . "_" . (string) $_GET['SearchString'];
 try {
-    //===========================檔頭設定
-    // Redirect output to a client’s web browser (Excel2007)
-    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); // 本文類型
-    header('Content-Disposition: attachment;filename=' . $file_name . '.xlsx'); // 檔名
-    header('Cache-Control: max-age=0');
     // If you're serving to IE 9, then the following may be needed
     /* header('Cache-Control: max-age=1');
       // If you're serving to IE over SSL, then the following may be needed
@@ -31,6 +26,12 @@ try {
     $mysqli->set_charset("utf8"); // 連線使用UTF-8
 //===========================Include PHPExcel
     require_once("/home/shota/public_html/udn_crawler/crawler/PHPExcel_1.8.0_doc/Classes/PHPExcel.php");
+    //===========================處理PHPEXCEL記憶體使用量過大的問題
+//設定cache可以減少memory使用量, 正確來說應該是強化garbage機制
+    //$cacheMethod = PHPExcel_CachedObjectStorageFactory:: cache_to_phpTemp;
+    //$cacheSettings = array(' memoryCacheSize ' => '512MB');
+    //PHPExcel_Settings::setCacheStorageMethod($cacheMethod, $cacheSettings);
+    ini_set("memory_limit", "512M");
 //===========================Create new PHPExcel object
     $objPHPExcel = new PHPExcel();
 //===========================Set document properties
@@ -87,6 +88,11 @@ try {
     $objPHPExcel->getActiveSheet()->setTitle($file_name);
 // Set active sheet index to the first sheet, so Excel opens this as the first sheet
     $objPHPExcel->setActiveSheetIndex(0);
+    //===========================檔頭設定
+    // Redirect output to a client’s web browser (Excel2007)
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); // 本文類型
+    header('Content-Disposition: attachment;filename=' . $file_name . '.xlsx'); // 檔名
+    header('Cache-Control: max-age=0');
 //===========================匯出
     $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
     $objWriter->save('php://output');
