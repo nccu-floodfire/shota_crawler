@@ -424,17 +424,17 @@ class Crawler {
                     $URL_out = $this->News_title_link_maker($case_id, $p, 1); // (要還原哪個CASE的URL, 國外報系標題頁的url, 國外報系) 回傳url
                     if ($p == $page_out) { // 最後一頁標題頁
                         if ($this->end == date('Ymd') && $this->start == date('Ymd')) {// 搜尋範圍是今天的case
-                            $this->News_URL_saver($case_id, $URL, TRUE, $News_count_out, TRUE);
+                            $this->News_URL_saver($case_id, $URL_out, TRUE, $News_count_out, TRUE);
                             // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國內新聞總數, 是不是今天的case) 存進資料庫
                         } else {
-                            $this->News_URL_saver($case_id, $URL, TRUE, $News_count_out, FALSE);
+                            $this->News_URL_saver($case_id, $URL_out, TRUE, $News_count_out, FALSE);
                         }
                     } else {
                         if ($this->end == date('Ymd') && $this->start == date('Ymd')) {// 搜尋範圍是今天的case
-                            $this->News_URL_saver($case_id, $URL, FALSE, $News_count_out, TRUE);
+                            $this->News_URL_saver($case_id, $URL_out, FALSE, $News_count_out, TRUE);
                             // (哪個case, 要爬的標題頁url, 這是不是最後一頁標題頁, 國內新聞總數, 是不是今天的case) 存進資料庫
                         } else {
-                            $this->News_URL_saver($case_id, $URL, FALSE, $News_count_out, FALSE);
+                            $this->News_URL_saver($case_id, $URL_out, FALSE, $News_count_out, FALSE);
                         }
                     }
                     sleep(rand(1, 4)); // 每頁暫停1~4秒
