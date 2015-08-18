@@ -51,7 +51,7 @@ $Password = $_POST['Password'];
                                     <section>
                                         <?php
                                         if ( isset($_SESSION['session_id']) ) { // 代表已經登入
-                                            header('Location:http://140.119.164.218/~shota/udn_crawler/index.php'); // 轉跳首頁
+                                            header('Location:http://140.119.164.218/~shota/udn_crawler/crawling.php'); // 轉跳目前情況
                                         }
                                         if (empty($Account) || empty($Password)) {
                                             ?>
@@ -84,10 +84,10 @@ $Password = $_POST['Password'];
                                                 $mysqli->close();
                                                 // 密碼核對
                                                 if ($User_Password == md5($Password)) {
-                                                    printf("登入成功!!<br>3秒後自動轉跳首頁...");
+                                                    echo "<strong><font color=#FF6600>登入成功!!</font></strong><br>3秒後自動轉跳首頁...";
                                                     $_SESSION['session_id'] = $Account;
-                                                    // 轉跳至首頁
-                                                    header("refresh: 3; url=http://140.119.164.218/~shota/udn_crawler/index.php");
+                                                    // 轉跳至目前情況
+                                                    header("refresh: 3; url=http://140.119.164.218/~shota/udn_crawler/crawling.php");
                                                 } else {
                                                     echo "<strong><font color=#FF6600>密碼錯誤!!</font></strong>請重新登入!!<br>請稍等5秒...";
                                                     // 轉跳, 重新登入
