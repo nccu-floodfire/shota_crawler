@@ -209,6 +209,7 @@ class News_content {
         //=====登入資料庫
         $this->DB_link();
         //=====先從Udn_News_URL表中尋找出Case_ID最前面(最小)的Case_ID
+        // LIMIT 資料起始的index, 要顯示幾筆資料
         $query = "SELECT `Case_ID` FROM `Udn_News_URL` WHERE `DONE` = 0 LIMIT 0, 1";
         $result = $this->mysqli->query($query) or die($this->mysqli->error . __LINE__);
         $URL_Case = $result->fetch_assoc();

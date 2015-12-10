@@ -70,7 +70,7 @@ class Show_case {
         $query = "SELECT * FROM `Udn_Case` ORDER BY `Case_ID` ASC";
         $result = $this->mysqli->query($query) or die($this->mysqli->error . __LINE__);
         //==========Show
-        echo "<strong>目前抓取速度為<font color=#FF6600>每半小時100則，先查先抓，請耐心等候，謝謝!!</font></br>";
+        echo "<strong>目前抓取速度為<font color=#FF6600>每日8:00~20:00，每半小時100則，先查先抓，請耐心等候，謝謝!!</font></br>";
         echo "搜尋時段為<font color=#FF6600>今天(\"從\"、\"到\"兩欄位等於今天日期)的Case，由於新聞連結時效性問題，會和一般Case同時抓取。</font></br>";
         echo "詞二→使用者下的第二個關鍵字(以此類推)。+→and；/→or；-→not(運算子目前忽略顯示)</br>";
         echo "<font color=#FF6600>\"從\"、\"到\"兩欄如果皆為空值(0000-00-00)代表搜尋所有日期。</font></br>";
